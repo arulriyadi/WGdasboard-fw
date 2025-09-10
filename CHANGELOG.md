@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2025-09-10
+
+### Fixed
+- **Theme Support Improvements**
+  - Fixed logo brightness adjustment for dark/light mode compatibility
+  - Improved sidebar text styling for better theme visibility
+  - Enhanced nav-link styling for both dark and light themes
+  - Added comprehensive CSS rules for theme-specific styling
+  - Improved text contrast and visibility in all theme modes
+  - Better icon and text color inheritance for sidebar elements
+
+### Technical Improvements
+- **Frontend Styling**
+  - Enhanced theme-specific CSS selectors
+  - Improved dynamic styling based on `data-bs-theme` attribute
+  - Better color contrast ratios for accessibility
+  - Optimized sidebar heading styling for both themes
+
 ## [2.0.0] - 2025-09-10
 
 ### Added
