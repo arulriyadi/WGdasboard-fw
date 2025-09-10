@@ -117,14 +117,14 @@ if [ ! -f "dashboard.py" ]; then
 fi
 
 # Check if modules exist
-if [ ! -f "modules/FirewallManager.py" ] || [ ! -f "modules/RouteManager.py" ]; then
-    print_error "Required modules not found. Please ensure FirewallManager.py and RouteManager.py exist in modules/ directory."
+if [ ! -f "modules/FirewallManager.py" ] || [ ! -f "modules/RouteManager.py" ] || [ ! -f "modules/LoggingManager.py" ]; then
+    print_error "Required modules not found. Please ensure FirewallManager.py, RouteManager.py, and LoggingManager.py exist in modules/ directory."
     exit 1
 fi
 
 # Check if frontend files exist
-if [ ! -f "static/app/src/views/firewall.vue" ] || [ ! -f "static/app/src/views/routing.vue" ]; then
-    print_error "Required frontend files not found. Please ensure firewall.vue and routing.vue exist in static/app/src/views/ directory."
+if [ ! -f "static/app/src/views/firewall.vue" ] || [ ! -f "static/app/src/views/routing.vue" ] || [ ! -f "static/app/src/views/logging.vue" ]; then
+    print_error "Required frontend files not found. Please ensure firewall.vue, routing.vue, and logging.vue exist in static/app/src/views/ directory."
     exit 1
 fi
 
@@ -150,6 +150,7 @@ print_status "Features available:"
 print_status "  - WireGuard VPN Management"
 print_status "  - Firewall Rules Management"
 print_status "  - Routing Table Management"
+print_status "  - Comprehensive Logging System"
 echo ""
 print_warning "Press Ctrl+C to stop the server"
 echo ""

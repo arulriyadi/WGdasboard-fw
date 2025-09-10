@@ -25,9 +25,11 @@ from modules.PeerJob import PeerJob
 from modules.SystemStatus import SystemStatus
 from modules.FirewallManager import FirewallManager
 from modules.RouteManager import RouteManager
+from modules.LoggingManager import LoggingManager
 SystemStatus = SystemStatus()
 FirewallManager = FirewallManager()
 RouteManager = RouteManager()
+LoggingManager = LoggingManager()
 
 DASHBOARD_VERSION = 'v4.2.5'
 
@@ -2120,8 +2122,24 @@ def API_AuthenticateLogin():
         resp.set_cookie("authToken", authToken)
         session.permanent = True
         DashboardLogger.log(str(request.url), str(request.remote_addr), Message=f"Login success: {data['username']}")
+        # Log to centralized logging system
+        LoggingManager.log_activity(
+            level='info',
+            category='authentication',
+            message=f'User login successful: {data["username"]}',
+            user=data['username'],
+            ip_address=request.remote_addr
+        )
         return resp
     DashboardLogger.log(str(request.url), str(request.remote_addr), Message=f"Login failed: {data['username']}")
+    # Log failed login attempt
+    LoggingManager.log_activity(
+        level='warning',
+        category='authentication',
+        message=f'Failed login attempt: {data["username"]}',
+        user=data['username'],
+        ip_address=request.remote_addr
+    )
     if totpEnabled:
         return ResponseObject(False, "Sorry, your username, password or OTP is incorrect.")
     else:
@@ -2129,6 +2147,15 @@ def API_AuthenticateLogin():
 
 @app.get(f'{APP_PREFIX}/api/signout')
 def API_SignOut():
+    # Log signout activity
+    username = session.get('username', 'unknown')
+    LoggingManager.log_activity(
+        level='info',
+        category='authentication',
+        message=f'User signout: {username}',
+        user=username,
+        ip_address=request.remote_addr
+    )
     resp = ResponseObject(True, "")
     resp.delete_cookie("authToken")
     session.clear()
@@ -2200,6 +2227,17 @@ def API_toggleWireguardConfiguration():
             configurationName) == 0 or configurationName not in WireguardConfigurations.keys():
         return ResponseObject(False, "Please provide a valid configuration name", status_code=404)
     toggleStatus, msg = WireguardConfigurations[configurationName].toggleConfiguration()
+    
+    # Log the activity
+    action = "started" if WireguardConfigurations[configurationName].Status else "stopped"
+    LoggingManager.log_activity(
+        level='info',
+        category='wireguard',
+        message=f'WireGuard configuration {action}: {configurationName}',
+        user=request.remote_addr,
+        ip_address=request.remote_addr
+    )
+    
     return ResponseObject(toggleStatus, msg, WireguardConfigurations[configurationName].Status)
 
 @app.post(f'{APP_PREFIX}/api/updateWireguardConfiguration')
@@ -2251,6 +2289,14 @@ def API_deleteWireguardConfiguration():
         return ResponseObject(False, "Please provide the configuration name you want to delete", status_code=404)
     status = WireguardConfigurations[data.get("ConfigurationName")].deleteConfiguration()
     if status:
+        # Log the activity
+        LoggingManager.log_activity(
+            level='info',
+            category='wireguard',
+            message=f'WireGuard configuration deleted: {data.get("ConfigurationName")}',
+            user=request.remote_addr,
+            ip_address=request.remote_addr
+        )
         WireguardConfigurations.pop(data.get("ConfigurationName"))
     return ResponseObject(status)
 
@@ -3222,6 +3268,15 @@ def API_addFirewallRule():
         
         result = FirewallManager.add_firewall_rule(data)
         if result['status']:
+            # Log the activity
+            LoggingManager.log_activity(
+                level='info',
+                category='firewall',
+                message=f'Firewall rule added: {data.get("chain", "unknown")} -> {data.get("target", "unknown")}',
+                user=request.remote_addr,
+                ip_address=request.remote_addr,
+                details=json.dumps(data)
+            )
             return ResponseObject(True, result['message'], result)
         else:
             return ResponseObject(False, result['message'], status_code=400)
@@ -3234,6 +3289,14 @@ def API_deleteFirewallRule(rule_id):
     try:
         result = FirewallManager.delete_firewall_rule(rule_id)
         if result['status']:
+            # Log the activity
+            LoggingManager.log_activity(
+                level='info',
+                category='firewall',
+                message=f'Firewall rule deleted: ID {rule_id}',
+                user=request.remote_addr,
+                ip_address=request.remote_addr
+            )
             return ResponseObject(True, result['message'])
         else:
             return ResponseObject(False, result['message'], status_code=400)
@@ -3246,6 +3309,14 @@ def API_reloadFirewallRules():
     try:
         result = FirewallManager.reload_firewall_rules()
         if result['status']:
+            # Log the activity
+            LoggingManager.log_activity(
+                level='info',
+                category='firewall',
+                message='Firewall rules reloaded from file',
+                user=request.remote_addr,
+                ip_address=request.remote_addr
+            )
             return ResponseObject(True, result['message'])
         else:
             return ResponseObject(False, result['message'], status_code=400)
@@ -3275,6 +3346,15 @@ def API_addRoute():
         
         result = RouteManager.add_route(data)
         if result['status']:
+            # Log the activity
+            LoggingManager.log_activity(
+                level='info',
+                category='routing',
+                message=f'Route added: {data.get("destination", "unknown")} via {data.get("gateway", "unknown")}',
+                user=request.remote_addr,
+                ip_address=request.remote_addr,
+                details=json.dumps(data)
+            )
             return ResponseObject(True, result['message'], result)
         else:
             return ResponseObject(False, result['message'], status_code=400)
@@ -3287,11 +3367,125 @@ def API_deleteRoute(route_id):
     try:
         result = RouteManager.delete_route(route_id)
         if result['status']:
+            # Log the activity
+            LoggingManager.log_activity(
+                level='info',
+                category='routing',
+                message=f'Route deleted: ID {route_id}',
+                user=request.remote_addr,
+                ip_address=request.remote_addr
+            )
             return ResponseObject(True, result['message'])
         else:
             return ResponseObject(False, result['message'], status_code=400)
     except Exception as e:
         return ResponseObject(False, f"Error deleting route: {str(e)}", status_code=500)
+
+# Logging Management API Endpoints
+@app.route(f'{APP_PREFIX}/api/logs', methods=["GET"])
+def API_getLogs():
+    """Get logs with filtering options"""
+    try:
+        # Get query parameters
+        limit = request.args.get('limit', 100, type=int)
+        offset = request.args.get('offset', 0, type=int)
+        category = request.args.get('category')
+        level = request.args.get('level')
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+        
+        logs = LoggingManager.get_logs(
+            limit=limit,
+            offset=offset,
+            category=category,
+            level=level,
+            start_date=start_date,
+            end_date=end_date
+        )
+        
+        return ResponseObject(True, "Logs retrieved successfully", logs)
+        
+    except Exception as e:
+        return ResponseObject(False, f"Error getting logs: {str(e)}", status_code=500)
+
+@app.route(f'{APP_PREFIX}/api/logs/statistics', methods=["GET"])
+def API_getLogStatistics():
+    """Get logging statistics"""
+    try:
+        stats = LoggingManager.get_log_statistics()
+        return ResponseObject(True, "Log statistics retrieved successfully", stats)
+        
+    except Exception as e:
+        return ResponseObject(False, f"Error getting log statistics: {str(e)}", status_code=500)
+
+@app.route(f'{APP_PREFIX}/api/logs/system/<log_type>', methods=["GET"])
+def API_getSystemLogs(log_type):
+    """Get system log files"""
+    try:
+        lines = request.args.get('lines', 100, type=int)
+        logs = LoggingManager.get_system_logs(log_type=log_type, lines=lines)
+        return ResponseObject(True, f"System {log_type} logs retrieved successfully", logs)
+        
+    except Exception as e:
+        return ResponseObject(False, f"Error getting system logs: {str(e)}", status_code=500)
+
+@app.route(f'{APP_PREFIX}/api/logs/clear', methods=["POST"])
+def API_clearLogs():
+    """Clear logs from database"""
+    try:
+        data = request.get_json() or {}
+        category = data.get('category')
+        days = data.get('days', type=int)
+        
+        result = LoggingManager.clear_logs(category=category, days=days)
+        
+        if result['status']:
+            # Log the activity
+            LoggingManager.log_activity(
+                level='info',
+                category='system',
+                message=f'Logs cleared: category={category}, days={days}',
+                user=request.remote_addr,
+                ip_address=request.remote_addr
+            )
+            return ResponseObject(True, result['message'], result)
+        else:
+            return ResponseObject(False, result['message'], status_code=400)
+            
+    except Exception as e:
+        return ResponseObject(False, f"Error clearing logs: {str(e)}", status_code=500)
+
+@app.route(f'{APP_PREFIX}/api/logs/export', methods=["GET"])
+def API_exportLogs():
+    """Export logs in specified format"""
+    try:
+        format_type = request.args.get('format', 'json')
+        category = request.args.get('category')
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+        
+        result = LoggingManager.export_logs(
+            format=format_type,
+            category=category,
+            start_date=start_date,
+            end_date=end_date
+        )
+        
+        if result['status']:
+            # Log the activity
+            LoggingManager.log_activity(
+                level='info',
+                category='system',
+                message=f'Logs exported: format={format_type}, category={category}',
+                user=request.remote_addr,
+                ip_address=request.remote_addr
+            )
+            return ResponseObject(True, "Logs exported successfully", result)
+        else:
+            return ResponseObject(False, result['message'], status_code=400)
+            
+    except Exception as e:
+        return ResponseObject(False, f"Error exporting logs: {str(e)}", status_code=500)
 
 @app.route(f'{APP_PREFIX}/api/system/info', methods=["GET"])
 def API_getSystemInfo():

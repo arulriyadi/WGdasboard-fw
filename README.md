@@ -7,6 +7,7 @@ Complete WGDashboard setup with integrated firewall and routing management capab
 - **WireGuard VPN Management**: Full WireGuard server management
 - **Firewall Management**: Add, delete, and reload iptables rules through web interface
 - **Routing Management**: Manage static routes and view routing table
+- **Comprehensive Logging**: Centralized logging system with activity tracking, system logs, and export capabilities
 - **System Integration**: Seamlessly integrated into single dashboard interface
 
 ## Quick Start
@@ -57,11 +58,13 @@ WGdasboard-fw/
 ├── wg-dashboard.ini        # Configuration file
 ├── modules/                # Backend modules
 │   ├── FirewallManager.py  # iptables management
-│   └── RouteManager.py     # routing table management
+│   ├── RouteManager.py     # routing table management
+│   └── LoggingManager.py   # centralized logging system
 └── static/app/src/         # Frontend components
     ├── views/
     │   ├── firewall.vue    # Firewall management UI
-    │   └── routing.vue     # Routing management UI
+    │   ├── routing.vue     # Routing management UI
+    │   └── logging.vue     # Logging management UI
     ├── components/
     │   └── navbar.vue      # Navigation with new menu items
     ├── router/
@@ -83,6 +86,13 @@ WGdasboard-fw/
 - `POST /api/routes` - Add new route
 - `DELETE /api/routes` - Delete route
 - `GET /api/system/info` - Get system information
+
+### Logging Management
+- `GET /api/logs` - Get activity logs with filtering
+- `GET /api/logs/statistics` - Get logging statistics
+- `GET /api/logs/system/{type}` - Get system log files
+- `POST /api/logs/clear` - Clear logs from database
+- `GET /api/logs/export` - Export logs in JSON/CSV format
 
 ## Configuration
 

@@ -27,6 +27,22 @@ class FirewallManager:
         except:
             pass  # Ignore logging errors
     
+    def log_activity(self, level: str, message: str, user: str = None, ip_address: str = None, details: str = None):
+        """Log activity to centralized logging system"""
+        try:
+            # Import here to avoid circular imports
+            from modules.LoggingManager import LoggingManager
+            LoggingManager().log_activity(
+                level=level,
+                category='firewall',
+                message=message,
+                user=user,
+                ip_address=ip_address,
+                details=details
+            )
+        except:
+            pass  # Fallback to file logging if centralized logging fails
+    
     def get_firewall_rules(self) -> List[Dict[str, Any]]:
         """Get current iptables rules"""
         try:

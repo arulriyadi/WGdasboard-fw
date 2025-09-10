@@ -97,6 +97,14 @@ const router = createRouter({
 					}
 				},
 				{
+					name: "Logging Management",
+					path: '/logging',
+					component: () => import("@/views/logging.vue"),
+					meta: {
+						title: "Logging Management"
+					}
+				},
+				{
 					name: "Configuration",
 					path: '/configuration/:id',
 					component: () => import('@/views/configuration.vue'),
