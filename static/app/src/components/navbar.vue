@@ -87,7 +87,8 @@ export default {
 					</li>
 				</ul>
 				<hr class="text-body my-2">
-				<h6 class="sidebar-heading px-3 mt-3 mb-1 text-muted text-center">
+				<h6 class="sidebar-heading px-3 mt-3 mb-1 text-center" 
+				    :class="dashboardConfigurationStore.Configuration.Server.dashboard_theme === 'dark' ? 'text-light-emphasis' : 'text-muted'">
 					<LocaleText t="WireGuard Configurations"></LocaleText>
 				</h6>
 				<ul class="nav flex-column px-2 gap-1">
@@ -101,7 +102,8 @@ export default {
 					</li>
 				</ul>
 				<hr class="text-body my-2">
-				<h6 class="sidebar-heading px-3 mt-3 mb-1 text-muted text-center">
+				<h6 class="sidebar-heading px-3 mt-3 mb-1 text-center" 
+				    :class="dashboardConfigurationStore.Configuration.Server.dashboard_theme === 'dark' ? 'text-light-emphasis' : 'text-muted'">
 					<LocaleText t="Tools"></LocaleText>
 				</h6>
 				<ul class="nav flex-column px-2 gap-1">
@@ -198,6 +200,51 @@ export default {
 	position: relative;
 }
 
+/* Theme-specific styling for sidebar text */
+[data-bs-theme="dark"] .sidebar .nav-link {
+	color: #e9ecef !important;
+}
+
+[data-bs-theme="dark"] .sidebar .nav-link:hover {
+	color: #ffffff !important;
+	background-color: #323844 !important;
+}
+
+[data-bs-theme="dark"] .sidebar .nav-link.active {
+	color: #74b7ff !important;
+	background-color: #323844 !important;
+}
+
+[data-bs-theme="dark"] .sidebar .nav-link i {
+	color: inherit !important;
+}
+
+[data-bs-theme="light"] .sidebar .nav-link {
+	color: #333333 !important;
+}
+
+[data-bs-theme="light"] .sidebar .nav-link:hover {
+	color: #000000 !important;
+	background-color: #e8e8e8 !important;
+}
+
+[data-bs-theme="light"] .sidebar .nav-link.active {
+	color: #007bff !important;
+	background-color: #e8e8e8 !important;
+}
+
+[data-bs-theme="light"] .sidebar .nav-link i {
+	color: inherit !important;
+}
+
+/* Sidebar headings theme styling */
+[data-bs-theme="dark"] .sidebar-heading {
+	color: #adb5bd !important;
+}
+
+[data-bs-theme="light"] .sidebar-heading {
+	color: #6c757d !important;
+}
 
 @supports (height: 100dvh) {
 	@media screen and (max-width: 768px){
@@ -205,10 +252,7 @@ export default {
 			height: calc(100dvh - 58px);
 		}	
 	}
-	
-
 }
-
 
 @keyframes zoomInFade {
 	0%{

@@ -23,7 +23,10 @@ const route = useRoute()
 	<nav class="navbar bg-dark sticky-top" data-bs-theme="dark" v-if="!route.meta.hideTopNav">
 		<div class="container-fluid d-flex text-body align-items-center">
 			<RouterLink to="/" class="navbar-brand mb-0 h1">
-				<img src="/img/Logo-2-Rounded-512x512.png" alt="WGDashboard Logo" style="width: 32px">
+				<img src="/img/Logo-2-Rounded-512x512.png" 
+				     alt="WGDashboard Logo" 
+				     style="width: 32px;"
+				     :style="{ filter: store.Configuration.Server.dashboard_theme === 'dark' ? 'brightness(1.2)' : 'brightness(0.8)' }">
 			</RouterLink>
 			<a role="button" class="navbarBtn text-body"
 			   @click="store.ShowNavBar = !store.ShowNavBar"
