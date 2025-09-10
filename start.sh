@@ -82,8 +82,8 @@ source venv/bin/activate
 
 # Install required packages
 print_status "Installing required Python packages..."
-pip install --upgrade pip --disable-pip-version-check
-pip install -r requirements.txt --disable-pip-version-check
+pip install --upgrade pip --disable-pip-version-check 2>/dev/null || pip install --upgrade pip
+pip install -r requirements.txt --disable-pip-version-check 2>/dev/null || pip install -r requirements.txt
 
 print_success "Python packages installed."
 
