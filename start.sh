@@ -82,8 +82,8 @@ source venv/bin/activate
 
 # Install required packages
 print_status "Installing required Python packages..."
-pip install --upgrade pip
-pip install flask gunicorn bcrypt
+pip install --upgrade pip --root-user-action=ignore
+pip install -r requirements.txt --root-user-action=ignore
 
 print_success "Python packages installed."
 

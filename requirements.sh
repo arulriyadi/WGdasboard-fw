@@ -82,7 +82,7 @@ apt install -y build-essential python3-dev
 
 # Upgrade pip
 print_status "Upgrading pip..."
-python3 -m pip install --upgrade pip
+python3 -m pip install --upgrade pip --root-user-action=ignore
 
 print_success "All system requirements installed successfully!"
 echo ""
