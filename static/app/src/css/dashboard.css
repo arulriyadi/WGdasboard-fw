@@ -113,7 +113,7 @@
 }
 
 [data-bs-theme="dark"] .sidebar .nav-link{
-    color: #e9ecef !important;
+    color: white !important;
 }
 
 [data-bs-theme="dark"] .sidebar .nav-link.active{
@@ -126,7 +126,7 @@
 
 /* Force dark mode text for all nav links */
 [data-bs-theme="dark"] .nav-link {
-    color: #e9ecef !important;
+    color: white !important;
 }
 
 [data-bs-theme="dark"] .nav-link * {
@@ -135,7 +135,7 @@
 
 /* Force dark mode text for sidebar headings */
 [data-bs-theme="dark"] .sidebar-heading {
-    color: #adb5bd !important;
+    color: white !important;
 }
 
 .nav-link:hover, .nav-link.active {

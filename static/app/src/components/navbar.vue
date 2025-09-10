@@ -202,7 +202,7 @@ export default {
 
 /* Theme-specific styling for sidebar text - More specific selectors */
 .navbar-container[data-bs-theme="dark"] .sidebar .nav-link {
-	color: #e9ecef !important;
+	color: white !important;
 }
 
 .navbar-container[data-bs-theme="dark"] .sidebar .nav-link:hover {
@@ -216,7 +216,7 @@ export default {
 }
 
 .navbar-container[data-bs-theme="dark"] .sidebar .nav-link i {
-	color: inherit !important;
+	color: white !important;
 }
 
 .navbar-container[data-bs-theme="light"] .sidebar .nav-link {
@@ -239,7 +239,7 @@ export default {
 
 /* Sidebar headings theme styling - More specific */
 .navbar-container[data-bs-theme="dark"] .sidebar-heading {
-	color: #adb5bd !important;
+	color: white !important;
 }
 
 .navbar-container[data-bs-theme="light"] .sidebar-heading {
