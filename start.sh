@@ -36,6 +36,13 @@ if [[ $EUID -eq 0 ]]; then
     print_warning "Running as root. This is not recommended for production."
 fi
 
+# Check if this is a git repository and pull latest changes
+if [ -d ".git" ]; then
+    print_status "Checking for updates..."
+    git pull origin main
+    print_success "Repository updated."
+fi
+
 # Check if Python 3 is installed
 if ! command -v python3 &> /dev/null; then
     print_error "Python 3 is not installed. Please install Python 3 first."
