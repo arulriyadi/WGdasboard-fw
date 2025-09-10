@@ -26,19 +26,25 @@ Complete WGDashboard setup with integrated firewall and routing management capab
    cd WGdasboard-fw
    ```
 
-2. **Run the application:**
+2. **Install system requirements (run as root/sudo):**
+   ```bash
+   sudo ./requirements.sh
+   ```
+
+3. **Run the application:**
    ```bash
    ./start.sh
    ```
 
-3. **Access the dashboard:**
+4. **Access the dashboard:**
    - URL: `http://localhost:10086`
    - Username: `admin`
    - Password: `admin`
 
-That's it! The script will automatically:
+That's it! The scripts will automatically:
+- Install all system dependencies (Python, pip, iptables, etc.)
 - Create virtual environment
-- Install required dependencies
+- Install required Python packages
 - Start the WGDashboard with firewall & routing features
 
 ## File Structure
@@ -104,23 +110,32 @@ If you prefer manual setup:
 
 ### Common Issues
 
-1. **Permission denied on start.sh:**
+1. **pip3 is not installed error:**
    ```bash
-   chmod +x start.sh
+   sudo ./requirements.sh
    ```
 
-2. **Python packages not found:**
+2. **Permission denied on scripts:**
+   ```bash
+   chmod +x requirements.sh start.sh
+   ```
+
+3. **Python packages not found:**
    ```bash
    pip3 install -r requirements.txt
    ```
 
-3. **iptables permission denied:**
+4. **iptables permission denied:**
    - Run with sudo or ensure user is in appropriate groups
    - Check iptables is installed: `sudo apt install iptables`
 
-4. **Port already in use:**
+5. **Port already in use:**
    - Change port in `wg-dashboard.ini`
    - Or kill existing process: `sudo lsof -ti:10086 | xargs kill`
+
+6. **System requirements missing:**
+   - Run `sudo ./requirements.sh` to install all dependencies
+   - This will install Python 3, pip3, iptables, iproute2, etc.
 
 ## Security Notes
 
