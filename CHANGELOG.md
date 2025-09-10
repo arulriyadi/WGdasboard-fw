@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2025-09-10
+
+### Fixed
+- **Dark Mode Text Visibility Issues**
+  - Fixed text still appearing dark in dark mode (based on user feedback)
+  - Added stronger CSS selectors with higher specificity
+  - Forced text color inheritance for all nav-link elements
+  - Added !important declarations to override conflicting styles
+  - Improved CSS specificity with .navbar-container[data-bs-theme] selectors
+  - Ensured all text elements inherit proper colors in dark mode
+
 ## [2.0.1] - 2025-09-10
 
 ### Fixed
