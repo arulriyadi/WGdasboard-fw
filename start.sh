@@ -67,6 +67,23 @@ if ! command -v ip &> /dev/null; then
     exit 1
 fi
 
+# Check if WireGuard is installed
+if ! command -v wg &> /dev/null; then
+    print_warning "WireGuard is not installed. Installing WireGuard..."
+    if [[ $EUID -eq 0 ]]; then
+        apt update
+        apt install -y wireguard wireguard-tools
+        print_success "WireGuard installed successfully."
+    else
+        print_error "WireGuard installation requires root privileges."
+        print_status "Please run: sudo apt update && sudo apt install -y wireguard wireguard-tools"
+        print_status "Or run this script as root: sudo ./start.sh"
+        exit 1
+    fi
+else
+    print_success "WireGuard is already installed."
+fi
+
 print_status "All required tools are available."
 
 # Create virtual environment if it doesn't exist

@@ -80,6 +80,10 @@ fi
 print_status "Installing build essentials..."
 apt install -y build-essential python3-dev
 
+# Install WireGuard
+print_status "Installing WireGuard..."
+apt install -y wireguard wireguard-tools
+
 # Upgrade pip
 print_status "Upgrading pip..."
 python3 -m pip install --upgrade pip --disable-pip-version-check
@@ -94,6 +98,7 @@ print_status "  ✅ iproute2"
 print_status "  ✅ curl"
 print_status "  ✅ git"
 print_status "  ✅ build-essential"
+print_status "  ✅ WireGuard"
 echo ""
 print_success "🎉 You can now run ./start.sh to start WGDashboard!"
 echo ""
