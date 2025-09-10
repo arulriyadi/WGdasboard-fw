@@ -200,50 +200,68 @@ export default {
 	position: relative;
 }
 
-/* Theme-specific styling for sidebar text */
-[data-bs-theme="dark"] .sidebar .nav-link {
+/* Theme-specific styling for sidebar text - More specific selectors */
+.navbar-container[data-bs-theme="dark"] .sidebar .nav-link {
 	color: #e9ecef !important;
 }
 
-[data-bs-theme="dark"] .sidebar .nav-link:hover {
+.navbar-container[data-bs-theme="dark"] .sidebar .nav-link:hover {
 	color: #ffffff !important;
 	background-color: #323844 !important;
 }
 
-[data-bs-theme="dark"] .sidebar .nav-link.active {
+.navbar-container[data-bs-theme="dark"] .sidebar .nav-link.active {
 	color: #74b7ff !important;
 	background-color: #323844 !important;
 }
 
-[data-bs-theme="dark"] .sidebar .nav-link i {
+.navbar-container[data-bs-theme="dark"] .sidebar .nav-link i {
 	color: inherit !important;
 }
 
-[data-bs-theme="light"] .sidebar .nav-link {
+.navbar-container[data-bs-theme="light"] .sidebar .nav-link {
 	color: #333333 !important;
 }
 
-[data-bs-theme="light"] .sidebar .nav-link:hover {
+.navbar-container[data-bs-theme="light"] .sidebar .nav-link:hover {
 	color: #000000 !important;
 	background-color: #e8e8e8 !important;
 }
 
-[data-bs-theme="light"] .sidebar .nav-link.active {
+.navbar-container[data-bs-theme="light"] .sidebar .nav-link.active {
 	color: #007bff !important;
 	background-color: #e8e8e8 !important;
 }
 
-[data-bs-theme="light"] .sidebar .nav-link i {
+.navbar-container[data-bs-theme="light"] .sidebar .nav-link i {
 	color: inherit !important;
 }
 
-/* Sidebar headings theme styling */
-[data-bs-theme="dark"] .sidebar-heading {
+/* Sidebar headings theme styling - More specific */
+.navbar-container[data-bs-theme="dark"] .sidebar-heading {
 	color: #adb5bd !important;
 }
 
-[data-bs-theme="light"] .sidebar-heading {
+.navbar-container[data-bs-theme="light"] .sidebar-heading {
 	color: #6c757d !important;
+}
+
+/* Force text color for all nav items in dark mode */
+.navbar-container[data-bs-theme="dark"] .nav-link {
+	color: #e9ecef !important;
+}
+
+.navbar-container[data-bs-theme="dark"] .nav-link * {
+	color: inherit !important;
+}
+
+/* Force text color for all nav items in light mode */
+.navbar-container[data-bs-theme="light"] .nav-link {
+	color: #333333 !important;
+}
+
+.navbar-container[data-bs-theme="light"] .nav-link * {
+	color: inherit !important;
 }
 
 @supports (height: 100dvh) {

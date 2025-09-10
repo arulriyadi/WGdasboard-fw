@@ -113,15 +113,29 @@
 }
 
 [data-bs-theme="dark"] .sidebar .nav-link{
-    color: white;
+    color: #e9ecef !important;
 }
 
 [data-bs-theme="dark"] .sidebar .nav-link.active{
-    color: #74b7ff;
+    color: #74b7ff !important;
 }
 
 [data-bs-theme="dark"] .nav-link:hover, [data-bs-theme="dark"] .nav-link.active{
-    background-color: #323844;
+    background-color: #323844 !important;
+}
+
+/* Force dark mode text for all nav links */
+[data-bs-theme="dark"] .nav-link {
+    color: #e9ecef !important;
+}
+
+[data-bs-theme="dark"] .nav-link * {
+    color: inherit !important;
+}
+
+/* Force dark mode text for sidebar headings */
+[data-bs-theme="dark"] .sidebar-heading {
+    color: #adb5bd !important;
 }
 
 .nav-link:hover, .nav-link.active {
