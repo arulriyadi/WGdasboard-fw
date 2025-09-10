@@ -138,6 +138,28 @@
     color: white !important;
 }
 
+/* Force dark mode text for management pages */
+[data-bs-theme="dark"] .text-muted {
+    color: white !important;
+}
+
+[data-bs-theme="dark"] .card-body {
+    color: white !important;
+}
+
+[data-bs-theme="dark"] .card-header {
+    color: white !important;
+}
+
+[data-bs-theme="dark"] .card-header h5 {
+    color: white !important;
+}
+
+[data-bs-theme="dark"] .table td,
+[data-bs-theme="dark"] .table th {
+    color: white !important;
+}
+
 .nav-link:hover, .nav-link.active {
     background-color: #e8e8e8;
 }
